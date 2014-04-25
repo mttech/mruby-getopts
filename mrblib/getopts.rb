@@ -20,7 +20,7 @@ module Getopts
     longopts.each do |longopt|
       longopt              = longopt.to_s
       has_argument         = (longopt.include?(':') ? 1 : 0)
-      name, default        = longopt.split(':')
+      name, default        = longopt.split(':', 2)
       default_values[name] = default if default
 
       longoptions << [name, has_argument, 0, 0]
