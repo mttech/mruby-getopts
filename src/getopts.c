@@ -1,3 +1,4 @@
+#define DEBUG
 /*
  * getopt for mruby
  *
@@ -69,6 +70,7 @@ mrb_getopt_long(mrb_state *mrb, mrb_value ary)
    */
   longopts = (struct option*)malloc(sizeof(struct option) * (RARRAY_LEN(longopts_m)+1));
   if (!longopts) {
+    free(argv);
     mrb_raise(mrb, E_RUNTIME_ERROR, "Memory allocation failed!");
   }
   for (i = 0; i < RARRAY_LEN(longopts_m); i++) {
@@ -84,8 +86,8 @@ mrb_getopt_long(mrb_state *mrb, mrb_value ary)
     //value_m = mrb_ary_ref(mrb, longopt_m, 2);
     longopts[i].flag = NULL;
 
-    //value_m = mrb_ary_ref(mrb, longopt_m, 3);
-    longopts[i].val = 0;
+    value_m = mrb_ary_ref(mrb, longopt_m, 3);
+    longopts[i].val = mrb_fixnum(value_m);
   }
   longopts[i].name    = NULL;
   longopts[i].has_arg = 0;

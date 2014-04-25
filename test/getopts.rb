@@ -4,7 +4,7 @@ longopts = [
             ["append",  0, 0, 0],
             ["delete",  1, 0, 0],
             ["verbose", 0, 0, 0],
-            ["create",  1, 0, 0],
+            ["create",  1, 0, 99], # 99 == 'c'
             ["file",    1, 0, 0]
           ]
 
@@ -35,6 +35,12 @@ assert "Array#getopt_long" do
     ary.getopt_long(optstring, [[0]])
   end
 
+  ary = %w(--create=foo)
+  class << ary; include Getopts; end
+  opt = ary.getopt_long(optstring, longopts)
+  assert_equal %w(c), opt.keys
+  assert_equal ["foo"], opt.values
+
   ary = %w(-a -b -c 100 -d 200 -0 -1 -2)
   class << ary; include Getopts; end
   opt = ary.getopt_long(optstring, [])
@@ -45,14 +51,14 @@ assert "Array#getopt_long" do
   ary = %w(--add=foo --append --delete=bar --verbose --create=baz --file=qux)
   class << ary; include Getopts; end
   opt = ary.getopt_long("", longopts)
-  assert_equal %w(add append delete verbose create file), opt.keys
+  assert_equal %w(add append delete verbose c file), opt.keys
   assert_equal ["foo", "", "bar", "", "baz", "qux"], opt.values
 
   ary = %w(-a -b -c foo -d bar -0 -1 -2 --add=foo --append --delete=bar --verbose --create=baz --file=qux)
   class << ary; include Getopts; end
   opt = ary.getopt_long(optstring, longopts)
-  assert_equal %w(a b c d 0 1 2 add append delete verbose create file), opt.keys
-  assert_equal ["", "", "foo", "bar", "", "", "", "foo", "", "bar", "", "baz", "qux"], opt.values
+  assert_equal %w(a b c d 0 1 2 add append delete verbose file), opt.keys
+  assert_equal ["", "", "baz", "bar", "", "", "", "foo", "", "bar", "", "qux"], opt.values
 end
 
 assert "Array#getopts" do
