@@ -1,4 +1,3 @@
-#define DEBUG
 /*
  * getopt for mruby
  *
