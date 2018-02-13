@@ -61,6 +61,9 @@ mrb_getopt_long(mrb_state *mrb, mrb_value ary)
   }
   argv[0] = "";
   for (i = 1; i < argc; i++) {
+    if (!mrb_string_p(mrb_ary_ref(mrb, ary, i - 1))) {
+      free(argv);
+    }
     argv[i] = mrb_str_to_cstr(mrb, mrb_ary_ref(mrb, ary, i-1));
   }
   
@@ -77,6 +80,10 @@ mrb_getopt_long(mrb_state *mrb, mrb_value ary)
     mrb_value longopt_m = mrb_ary_ref(mrb, longopts_m, i);
 
     value_m = mrb_ary_ref(mrb, longopt_m, 0);
+    if (!mrb_string_p(value_m)) {
+      free(argv);
+      free(longopts);
+    }
     longopts[i].name = mrb_str_to_cstr(mrb, value_m);
 
     value_m = mrb_ary_ref(mrb, longopt_m, 1);
