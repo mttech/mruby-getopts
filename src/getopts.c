@@ -138,12 +138,19 @@ mrb_getopt_long(mrb_state *mrb, mrb_value ary)
   return opt_hash;
 }
 
+static mrb_value 
+mrb_optind(mrb_state *mrb, mrb_value ary)
+{
+    return mrb_fixnum_value(optind);
+}
+
 void
 mrb_mruby_getopts_gem_init(mrb_state *mrb)
 {
   struct RClass *a = mrb_define_module(mrb, "Getopts");
 
   mrb_define_method(mrb, a, "getopt_long", mrb_getopt_long, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, a, "optind", mrb_optind, MRB_ARGS_NONE());
 }
 
 void

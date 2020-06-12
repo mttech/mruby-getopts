@@ -67,4 +67,5 @@ assert "Array#getopts" do
   opt = ary.getopts('c:d', "verbose", "add:", "hoge:piyo")
   assert_equal %w(verbose c add hoge), opt.keys
   assert_equal ["", "foo", "bar", "piyo"], opt.values
+  assert_equal 5, ary.optind
 end
